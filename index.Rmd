@@ -26,7 +26,9 @@ tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
 Paragraph or two introducing your datasets and variables, why they are interesting to you, etc.
 
 ```{R}
-# read your datasets in here, e.g., with read_csv()
+library(tidyverse)
+countyhealth <- read_csv("~/Data from County Health Rankings and Biostats project.csv")
+countyvaccines <- read_csv("~/COVID-19 Vaccine Data by County.csv")
 
 ```
 
@@ -35,19 +37,25 @@ Paragraph or two introducing your datasets and variables, why they are interesti
 If your datasets are tidy already, demonstrate that you can reshape data with pivot wider/longer here (e.g., untidy and then retidy). Alternatively, it may be easier to wait until the wrangling section so you can reshape your summary statistics. Note here if you are going to do this.
 
 ```{R}
-# your tidying code (if applicable; can also wait until wrangling section)
+"I will reshape my data later with my summary statistics!"
 ```
 
     
 #### Joining/Merging
 
 ```{R}
-# your joining code
 
+inner_join(countyhealth,countyvaccines, by="county") -> combinedcounty
+
+countyhealth %>% summarize_all(n_distinct)
+countyvaccines %>% summarize_all(n_distinct)
+combinedcounty %>% summarize_all(n_distinct)
+anti_join(countyhealth,countyvaccines)
+anti_join(countyvaccines,countyhealth)
 # your joining code
 ```
 
-Discussions of joining here. Feel encouraged to break up into more than once code chunk and discuss each in turn.
+An inner join was performed on the two datasets as it only kept all the rows that dealt with information on the counties. The totals calculated for the Texas state as a whole won't be used. There are 258 total rows in countyvaccines and 254 total rows in countyhealth. All rows of both datasets are unique as the IDs are just the counties within Texas, although countyvaccines does include rows with totals for Texas and additional vaccine programs that have allocated vaccines in Texas. All IDs from countyhealth appear in the inner join and only 4 IDs: Texas, Federal Long-Term Care Vaccination Program, Federal Pharmacy Retail Vaccination Program, and other only appear in countyvaccines. The IDs that the datasets have in common are all the counties in Texas: 254 in total. Four rows were dropped, but there isn't any potential problem with this as they don't relate to the counties specifically, they relate to the state as a whole.
 
 ####  Wrangling
 

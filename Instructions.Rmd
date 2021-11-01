@@ -41,13 +41,13 @@ Note that you will need to read these datasets into R at the top of your Rmd fil
 
 ```{R eval=F}
 library(tidyverse)
-data1 <- read_csv("/path/to/dataset1.csv")
-data2 <- read_csv("/path/to/dataset2.csv")
+data1 <- read_csv("/path/to/Data from County Health Rankings and Biostats project.csv")
+data2 <- read_csv("/path/to/COVID-19 Vaccine Data by County.csv")
 
 #or, if you'd prefer to read it in from some remote location
 
-data1 <- read_csv("https://some.website/dataset1.csv")
-data2 <- read_csv("https://some.website/dataset2.csv")
+data1 <- read_csv("https://healthdata.gov/api/views/anag-cw7u/rows.csv?accessType=DOWNLOAD")
+data2 <- read_csv("https://data.cdc.gov/api/views/8xkx-amqh/rows.csv?accessType=DOWNLOAD")
 ```
 
 ### Guidelines
