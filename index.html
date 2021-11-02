@@ -1538,7 +1538,11 @@ div.tocify {
 <div id="introduction" class="section level4">
 <h4>Introduction</h4>
 <p>Paragraph or two introducing your datasets and variables, why they are interesting to you, etc.</p>
+<p>The two datasets I have chosen are County Health Rankings in Texas and COVID-19 vaccinations by county in Texas. The variables contained in the County Health Rankings in Texas come partially from my Biostatistics project: county, food environment index, primary care physician population, and urban/rural classification. The variables contained in COVID-19 vaccinations by county in Texas deal with counties, the population who is eligible for vaccination (people 12 and older), and population of fully vaccinated individuals. The food environment index was calculated by measuring access to healthy foods and the income of counties and primary care physician population was found by looking at ratios of population to primary care physicians as well as including D.O.s. Population data was aquired by the 2019 US Census Bureau Population Estimates and the population who have been fully vaccinated was collected through vaccination records submitted by health care providers.</p>
+<p>This data is interesting to me because I want to see if there’s a correlation between food environment index and people who are fully vaccinated. The food environment index takes into account access to supermarkets and grocery stores, which usually also have pharmacies as well where vaccinations can be given. I also want to look at how the population of primary care physicians could potentially impact the amount of fully vaccinated individuals. I would be inclined to believe that primary care physicians would definitely advertise for getting the vaccine. Finally I want to compare the data between rural and urban counties for vaccinated individuals. I feel like there would definitely be a higher percentage of individuals who are fully vaccinated in urban counties compared to rural ones.</p>
 <pre class="r"><code>library(tidyverse)
+library(dplyr)
+library(gt)
 countyhealth &lt;- read_csv(&quot;~/Data from County Health Rankings and Biostats project.csv&quot;)
 countyvaccines &lt;- read_csv(&quot;~/COVID-19 Vaccine Data by County.csv&quot;)</code></pre>
 </div>
@@ -1554,69 +1558,1002 @@ countyvaccines &lt;- read_csv(&quot;~/COVID-19 Vaccine Data by County.csv&quot;)
 
 countyhealth %&gt;% summarize_all(n_distinct)</code></pre>
 <pre><code>## # A tibble: 1 x 4
-##   county food_environment_in… primary_care_physician_pop… urban_rural_classific…
+##   county food.environment.in… primary.care.physician.pop… urban.rural.classific…
 ##    &lt;int&gt;                &lt;int&gt;                       &lt;int&gt;                  &lt;int&gt;
 ## 1    254                   53                          71                      2</code></pre>
 <pre class="r"><code>countyvaccines %&gt;% summarize_all(n_distinct)</code></pre>
-<pre><code>## # A tibble: 1 x 14
-##   county public_health_r… total_doses_all… vaccine_doses_a… people_vaccinat…
+<pre><code>## # A tibble: 1 x 6
+##   county total.doses.all… vaccine.doses.a… people.vaccinat… people.fully.va…
 ##    &lt;int&gt;            &lt;int&gt;            &lt;int&gt;            &lt;int&gt;            &lt;int&gt;
-## 1    258                9              176              256              257
-## # … with 9 more variables: people_fully_vaccinated &lt;int&gt;,
-## #   `population_12+` &lt;int&gt;, `population_16+` &lt;int&gt;, `population_65+` &lt;int&gt;,
-## #   population_phase_1A_healthcare_workers &lt;int&gt;,
-## #   population_phase_1A_long_term_care_residents &lt;int&gt;,
-## #   population_16_through_64_any_medical_condition &lt;int&gt;,
-## #   population_education_and_child_care &lt;int&gt;,
-## #   people_vaccinated_with_an_additional_dose &lt;int&gt;</code></pre>
+## 1    258              176              256              257              257
+## # … with 1 more variable: population.12.and.older &lt;int&gt;</code></pre>
 <pre class="r"><code>combinedcounty %&gt;% summarize_all(n_distinct)</code></pre>
-<pre><code>## # A tibble: 1 x 17
-##   county food_environmen… primary_care_ph… urban_rural_cla… public_health_r…
+<pre><code>## # A tibble: 1 x 9
+##   county food.environmen… primary.care.ph… urban.rural.cla… total.doses.all…
 ##    &lt;int&gt;            &lt;int&gt;            &lt;int&gt;            &lt;int&gt;            &lt;int&gt;
-## 1    254               53               71                2                8
-## # … with 12 more variables: total_doses_allocated &lt;int&gt;,
-## #   vaccine_doses_administered &lt;int&gt;,
-## #   people_vaccinated_with_at_least_one_dose &lt;int&gt;,
-## #   people_fully_vaccinated &lt;int&gt;, `population_12+` &lt;int&gt;,
-## #   `population_16+` &lt;int&gt;, `population_65+` &lt;int&gt;,
-## #   population_phase_1A_healthcare_workers &lt;int&gt;,
-## #   population_phase_1A_long_term_care_residents &lt;int&gt;,
-## #   population_16_through_64_any_medical_condition &lt;int&gt;,
-## #   population_education_and_child_care &lt;int&gt;,
-## #   people_vaccinated_with_an_additional_dose &lt;int&gt;</code></pre>
+## 1    254               53               71                2              172
+## # … with 4 more variables: vaccine.doses.administered &lt;int&gt;,
+## #   people.vaccinated.with.at.least.one.dose &lt;int&gt;,
+## #   people.fully.vaccinated &lt;int&gt;, population.12.and.older &lt;int&gt;</code></pre>
 <pre class="r"><code>anti_join(countyhealth, countyvaccines)</code></pre>
 <pre><code>## # A tibble: 0 x 4
-## # … with 4 variables: county &lt;chr&gt;, food_environment_index &lt;dbl&gt;,
-## #   primary_care_physician_population &lt;dbl&gt;, urban_rural_classification &lt;chr&gt;</code></pre>
+## # … with 4 variables: county &lt;chr&gt;, food.environment.index &lt;dbl&gt;,
+## #   primary.care.physician.population &lt;dbl&gt;, urban.rural.classification &lt;chr&gt;</code></pre>
 <pre class="r"><code>anti_join(countyvaccines, countyhealth)</code></pre>
-<pre><code>## # A tibble: 4 x 14
-##   county public_health_r… total_doses_all… vaccine_doses_a… people_vaccinat…
-##   &lt;chr&gt;  &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
-## 1 Texas  &lt;NA&gt;                     27513735         33479812         17770549
-## 2 Feder… &lt;NA&gt;                       720525               NA               NA
-## 3 Feder… &lt;NA&gt;                      5509700               NA               NA
-## 4 Other  &lt;NA&gt;                           NA           612838           404595
-## # … with 9 more variables: people_fully_vaccinated &lt;dbl&gt;,
-## #   `population_12+` &lt;dbl&gt;, `population_16+` &lt;dbl&gt;, `population_65+` &lt;dbl&gt;,
-## #   population_phase_1A_healthcare_workers &lt;dbl&gt;,
-## #   population_phase_1A_long_term_care_residents &lt;dbl&gt;,
-## #   population_16_through_64_any_medical_condition &lt;dbl&gt;,
-## #   population_education_and_child_care &lt;dbl&gt;,
-## #   people_vaccinated_with_an_additional_dose &lt;dbl&gt;</code></pre>
+<pre><code>## # A tibble: 4 x 6
+##   county total.doses.all… vaccine.doses.a… people.vaccinat… people.fully.va…
+##   &lt;chr&gt;             &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1 Texas          27513735         33479812         17770549         15461840
+## 2 Feder…           720525               NA               NA               NA
+## 3 Feder…          5509700               NA               NA               NA
+## 4 Other                NA           612838           404595           274992
+## # … with 1 more variable: population.12.and.older &lt;dbl&gt;</code></pre>
 <pre class="r"><code># your joining code</code></pre>
-<p>An inner join was performed on the two datasets as it only kept all the rows that dealt with information on the counties. The totals calculated for the Texas state as a whole won’t be used. There are 258 total rows in countyvaccines and 254 total rows in countyhealth. All rows of both datasets are unique as the IDs are just the counties within Texas, although countyvaccines does include rows with totals for Texas and additional vaccine programs that have allocated vaccines in Texas. All IDs from countyhealth appear in the inner join and only 4 IDs: Texas, Federal Long-Term Care Vaccination Program, Federal Pharmacy Retail Vaccination Program, and other only appear in countyvaccines. The IDs that the datasets have in common are all the counties in Texas: 254 in total. Four rows were dropped, but there isn’t any potential problem with this as they don’t relate to the counties specifically, they relate to the state as a whole.</p>
+<p>An inner join by counties was performed on the two datasets as it kept all the rows that dealt with information based on the Texas counties. The totals calculated for the Texas state as a whole won’t be used. There are 258 total rows in countyvaccines and 254 total rows in countyhealth. All rows of both datasets are unique as the IDs are just the counties within Texas, although countyvaccines does include rows with totals for Texas and additional vaccine programs that have allocated vaccines in Texas. All IDs from countyhealth appear in the inner join and only 4 IDs: Texas, Federal Long-Term Care Vaccination Program, Federal Pharmacy Retail Vaccination Program, and other only appear in countyvaccines. The IDs that the datasets have in common are all the counties in Texas: 254 in total. Four rows were dropped, but there isn’t any potential problem with this as they don’t relate to the counties specifically, they relate to the state as a whole.</p>
 </div>
 <div id="wrangling" class="section level4">
 <h4>Wrangling</h4>
-<pre class="r"><code># your wrangling code
+<pre class="r"><code>combinedcountyfinal &lt;- combinedcounty %&gt;% mutate(percentage.fully.vaccinated = (people.fully.vaccinated/population.12.and.older) * 
+    100) %&gt;% select(-total.doses.allocated, -vaccine.doses.administered)
 
-# your wrangling code
+combinedcountyfinal %&gt;% group_by(urban.rural.classification) %&gt;% 
+    summarize(count = n())</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   urban.rural.classification count
+##   &lt;chr&gt;                      &lt;int&gt;
+## 1 Rural                        172
+## 2 Urban                         82</code></pre>
+<pre class="r"><code>combinedcountyfinal %&gt;% filter(str_detect(percentage.fully.vaccinated, 
+    &quot;^[156789]&quot;)) %&gt;% arrange(desc(percentage.fully.vaccinated))</code></pre>
+<pre><code>## # A tibble: 92 x 8
+##    county food.environmen… primary.care.ph… urban.rural.cla… people.vaccinat…
+##    &lt;chr&gt;             &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;
+##  1 Presi…              2.7                2 Rural                        6427
+##  2 Webb                6.5               86 Urban                      242360
+##  3 Starr               3.7               14 Rural                       49768
+##  4 Maver…              5.3               17 Rural                       53167
+##  5 Camer…              6                208 Urban                      325786
+##  6 Hidal…              5.3              399 Urban                      643756
+##  7 El Pa…              7                407 Urban                      621042
+##  8 Fort …              8                677 Urban                      574924
+##  9 Travis              7.6             1078 Urban                      901419
+## 10 Collin              8.4             1019 Urban                      694194
+## # … with 82 more rows, and 3 more variables: people.fully.vaccinated &lt;dbl&gt;,
+## #   population.12.and.older &lt;dbl&gt;, percentage.fully.vaccinated &lt;dbl&gt;</code></pre>
+<pre class="r"><code>combinedcountyfinal %&gt;% filter(str_detect(percentage.fully.vaccinated, 
+    &quot;^[234]&quot;)) %&gt;% arrange(percentage.fully.vaccinated)</code></pre>
+<pre><code>## # A tibble: 162 x 8
+##    county food.environmen… primary.care.ph… urban.rural.cla… people.vaccinat…
+##    &lt;chr&gt;             &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;
+##  1 King                5.6                0 Rural                          58
+##  2 Loving              2.6                0 Rural                          41
+##  3 Newton              5.8               NA Urban                        3490
+##  4 Gaines              8.2                4 Rural                        4773
+##  5 Motley              7                  0 Rural                         436
+##  6 Lipsc…              5.7               NA Rural                         974
+##  7 Rober…              7                  0 Rural                         265
+##  8 Colli…              7.7                1 Rural                         967
+##  9 Dicke…              6.9                1 Rural                         738
+## 10 Borden              6.9                0 Rural                         219
+## # … with 152 more rows, and 3 more variables: people.fully.vaccinated &lt;dbl&gt;,
+## #   population.12.and.older &lt;dbl&gt;, percentage.fully.vaccinated &lt;dbl&gt;</code></pre>
+<pre class="r"><code>Table1 &lt;- combinedcountyfinal %&gt;% select(food.environment.index, 
+    primary.care.physician.population, people.vaccinated.with.at.least.one.dose, 
+    people.fully.vaccinated, population.12.and.older, percentage.fully.vaccinated) %&gt;% 
+    na.omit() %&gt;% summarize_each(funs(mean = mean, sd = sd, min = min, 
+    max = max, median = median)) %&gt;% pivot_longer(0:30, names_to = &quot;stats&quot;, 
+    values_to = &quot;value&quot;) %&gt;% separate(stats, into = c(&quot;Variable&quot;, 
+    &quot;stats&quot;), sep = &quot;_&quot;) %&gt;% pivot_wider(names_from = stats, 
+    values_from = value)
 
-# your wrangling code</code></pre>
-<p>Your discussion of wrangling section here. Feel encouraged to break up into more than once code chunk and discuss each in turn.</p>
-</div>
-<div id="visualizing" class="section level4">
-<h4>Visualizing</h4>
+Table2 &lt;- combinedcountyfinal %&gt;% group_by(urban.rural.classification) %&gt;% 
+    select(food.environment.index, primary.care.physician.population, 
+        people.vaccinated.with.at.least.one.dose, people.fully.vaccinated, 
+        population.12.and.older, percentage.fully.vaccinated) %&gt;% 
+    na.omit() %&gt;% summarize_each(funs(mean = mean, sd = sd, min = min, 
+    max = max, median = median)) %&gt;% pivot_longer(-1, names_to = &quot;stats&quot;, 
+    values_to = &quot;value&quot;) %&gt;% separate(stats, into = c(&quot;Variable&quot;, 
+    &quot;stats&quot;), sep = &quot;_&quot;) %&gt;% pivot_wider(names_from = stats, 
+    values_from = value)
+
+
+Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;), 
+    subtitle = md(&quot;A table of my &#39;combinedcounty&#39; summary statistics&quot;)) %&gt;% 
+    tab_spanner(label = &quot;Stats&quot;, columns = c(&quot;mean&quot;, &quot;sd&quot;, &quot;min&quot;, 
+        &quot;max&quot;, &quot;median&quot;))</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#vjnjhyyngt .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vjnjhyyngt .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vjnjhyyngt .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vjnjhyyngt .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vjnjhyyngt .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vjnjhyyngt .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vjnjhyyngt .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vjnjhyyngt .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vjnjhyyngt .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vjnjhyyngt .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vjnjhyyngt .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vjnjhyyngt .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vjnjhyyngt .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vjnjhyyngt .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vjnjhyyngt .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vjnjhyyngt .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vjnjhyyngt .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#vjnjhyyngt .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vjnjhyyngt .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#vjnjhyyngt .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vjnjhyyngt .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vjnjhyyngt .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vjnjhyyngt .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vjnjhyyngt .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vjnjhyyngt .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#vjnjhyyngt .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vjnjhyyngt .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#vjnjhyyngt .gt_left {
+  text-align: left;
+}
+
+#vjnjhyyngt .gt_center {
+  text-align: center;
+}
+
+#vjnjhyyngt .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vjnjhyyngt .gt_font_normal {
+  font-weight: normal;
+}
+
+#vjnjhyyngt .gt_font_bold {
+  font-weight: bold;
+}
+
+#vjnjhyyngt .gt_font_italic {
+  font-style: italic;
+}
+
+#vjnjhyyngt .gt_super {
+  font-size: 65%;
+}
+
+#vjnjhyyngt .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="vjnjhyyngt" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  <thead class="gt_header">
+    <tr>
+      <th colspan="6" class="gt_heading gt_title gt_font_normal" style><strong>Summary Statistics</strong></th>
+    </tr>
+    <tr>
+      <th colspan="6" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style>A table of my 'combinedcounty' summary statistics</th>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_center gt_columns_bottom_border" rowspan="2" colspan="1">Variable</th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="5">
+        <span class="gt_column_spanner">Stats</span>
+      </th>
+    </tr>
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">mean</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">sd</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">min</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">max</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">median</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">food.environment.index</td>
+      <td class="gt_row gt_right">6.801724e+00</td>
+      <td class="gt_row gt_right">1.090215e+00</td>
+      <td class="gt_row gt_right">2.40000</td>
+      <td class="gt_row gt_right">8.9000</td>
+      <td class="gt_row gt_right">6.90000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">primary.care.physician.population</td>
+      <td class="gt_row gt_right">7.532328e+01</td>
+      <td class="gt_row gt_right">2.756165e+02</td>
+      <td class="gt_row gt_right">0.00000</td>
+      <td class="gt_row gt_right">2749.0000</td>
+      <td class="gt_row gt_right">7.00000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">people.vaccinated.with.at.least.one.dose</td>
+      <td class="gt_row gt_right">7.456940e+04</td>
+      <td class="gt_row gt_right">2.724569e+05</td>
+      <td class="gt_row gt_right">41.00000</td>
+      <td class="gt_row gt_right">3022582.0000</td>
+      <td class="gt_row gt_right">9779.50000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">people.fully.vaccinated</td>
+      <td class="gt_row gt_right">6.521145e+04</td>
+      <td class="gt_row gt_right">2.375010e+05</td>
+      <td class="gt_row gt_right">32.00000</td>
+      <td class="gt_row gt_right">2625745.0000</td>
+      <td class="gt_row gt_right">8290.50000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">population.12.and.older</td>
+      <td class="gt_row gt_right">1.032158e+05</td>
+      <td class="gt_row gt_right">3.520752e+05</td>
+      <td class="gt_row gt_right">130.00000</td>
+      <td class="gt_row gt_right">3873534.0000</td>
+      <td class="gt_row gt_right">17883.00000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">percentage.fully.vaccinated</td>
+      <td class="gt_row gt_right">4.964953e+01</td>
+      <td class="gt_row gt_right">1.145959e+01</td>
+      <td class="gt_row gt_right">21.39535</td>
+      <td class="gt_row gt_right">100.3338</td>
+      <td class="gt_row gt_right">47.93272</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<pre class="r"><code>Table2 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;), 
+    subtitle = md(&quot;A table of my &#39;combinedcounty&#39; summary statistics grouped by urban and rural classification&quot;)) %&gt;% 
+    tab_spanner(label = &quot;Stats&quot;, columns = c(&quot;mean&quot;, &quot;sd&quot;, &quot;min&quot;, 
+        &quot;max&quot;, &quot;median&quot;))</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#jsysgierli .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#jsysgierli .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jsysgierli .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#jsysgierli .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#jsysgierli .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jsysgierli .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jsysgierli .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#jsysgierli .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#jsysgierli .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#jsysgierli .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#jsysgierli .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#jsysgierli .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#jsysgierli .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#jsysgierli .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#jsysgierli .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#jsysgierli .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#jsysgierli .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#jsysgierli .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jsysgierli .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#jsysgierli .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jsysgierli .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#jsysgierli .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#jsysgierli .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jsysgierli .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jsysgierli .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#jsysgierli .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jsysgierli .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#jsysgierli .gt_left {
+  text-align: left;
+}
+
+#jsysgierli .gt_center {
+  text-align: center;
+}
+
+#jsysgierli .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#jsysgierli .gt_font_normal {
+  font-weight: normal;
+}
+
+#jsysgierli .gt_font_bold {
+  font-weight: bold;
+}
+
+#jsysgierli .gt_font_italic {
+  font-style: italic;
+}
+
+#jsysgierli .gt_super {
+  font-size: 65%;
+}
+
+#jsysgierli .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="jsysgierli" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  <thead class="gt_header">
+    <tr>
+      <th colspan="7" class="gt_heading gt_title gt_font_normal" style><strong>Summary Statistics</strong></th>
+    </tr>
+    <tr>
+      <th colspan="7" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style>A table of my 'combinedcounty' summary statistics grouped by urban and rural classification</th>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_center gt_columns_bottom_border" rowspan="2" colspan="1">urban.rural.classification</th>
+      <th class="gt_col_heading gt_center gt_columns_bottom_border" rowspan="2" colspan="1">Variable</th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="5">
+        <span class="gt_column_spanner">Stats</span>
+      </th>
+    </tr>
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">mean</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">sd</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">min</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">max</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">median</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">Rural</td>
+      <td class="gt_row gt_left">food.environment.index</td>
+      <td class="gt_row gt_right">6.625641e+00</td>
+      <td class="gt_row gt_right">1.194064e+00</td>
+      <td class="gt_row gt_right">2.40000</td>
+      <td class="gt_row gt_right">8.900000e+00</td>
+      <td class="gt_row gt_right">6.80000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Rural</td>
+      <td class="gt_row gt_left">primary.care.physician.population</td>
+      <td class="gt_row gt_right">7.352564e+00</td>
+      <td class="gt_row gt_right">8.669416e+00</td>
+      <td class="gt_row gt_right">0.00000</td>
+      <td class="gt_row gt_right">5.100000e+01</td>
+      <td class="gt_row gt_right">4.00000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Rural</td>
+      <td class="gt_row gt_left">people.vaccinated.with.at.least.one.dose</td>
+      <td class="gt_row gt_right">9.080750e+03</td>
+      <td class="gt_row gt_right">9.551507e+03</td>
+      <td class="gt_row gt_right">41.00000</td>
+      <td class="gt_row gt_right">5.316700e+04</td>
+      <td class="gt_row gt_right">6347.00000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Rural</td>
+      <td class="gt_row gt_left">people.fully.vaccinated</td>
+      <td class="gt_row gt_right">7.860545e+03</td>
+      <td class="gt_row gt_right">8.160419e+03</td>
+      <td class="gt_row gt_right">32.00000</td>
+      <td class="gt_row gt_right">4.449900e+04</td>
+      <td class="gt_row gt_right">5541.50000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Rural</td>
+      <td class="gt_row gt_left">population.12.and.older</td>
+      <td class="gt_row gt_right">1.608337e+04</td>
+      <td class="gt_row gt_right">1.538998e+04</td>
+      <td class="gt_row gt_right">130.00000</td>
+      <td class="gt_row gt_right">7.248600e+04</td>
+      <td class="gt_row gt_right">10870.00000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Rural</td>
+      <td class="gt_row gt_left">percentage.fully.vaccinated</td>
+      <td class="gt_row gt_right">4.723110e+01</td>
+      <td class="gt_row gt_right">1.058440e+01</td>
+      <td class="gt_row gt_right">21.39535</td>
+      <td class="gt_row gt_right">1.003338e+02</td>
+      <td class="gt_row gt_right">45.61935</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Urban</td>
+      <td class="gt_row gt_left">food.environment.index</td>
+      <td class="gt_row gt_right">7.163158e+00</td>
+      <td class="gt_row gt_right">7.192296e-01</td>
+      <td class="gt_row gt_right">5.30000</td>
+      <td class="gt_row gt_right">8.500000e+00</td>
+      <td class="gt_row gt_right">7.10000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Urban</td>
+      <td class="gt_row gt_left">primary.care.physician.population</td>
+      <td class="gt_row gt_right">2.148421e+02</td>
+      <td class="gt_row gt_right">4.521953e+02</td>
+      <td class="gt_row gt_right">0.00000</td>
+      <td class="gt_row gt_right">2.749000e+03</td>
+      <td class="gt_row gt_right">62.00000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Urban</td>
+      <td class="gt_row gt_left">people.vaccinated.with.at.least.one.dose</td>
+      <td class="gt_row gt_right">2.089935e+05</td>
+      <td class="gt_row gt_right">4.485721e+05</td>
+      <td class="gt_row gt_right">660.00000</td>
+      <td class="gt_row gt_right">3.022582e+06</td>
+      <td class="gt_row gt_right">58054.00000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Urban</td>
+      <td class="gt_row gt_left">people.fully.vaccinated</td>
+      <td class="gt_row gt_right">1.829317e+05</td>
+      <td class="gt_row gt_right">3.907824e+05</td>
+      <td class="gt_row gt_right">591.00000</td>
+      <td class="gt_row gt_right">2.625745e+06</td>
+      <td class="gt_row gt_right">51898.50000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Urban</td>
+      <td class="gt_row gt_left">population.12.and.older</td>
+      <td class="gt_row gt_right">2.820667e+05</td>
+      <td class="gt_row gt_right">5.771415e+05</td>
+      <td class="gt_row gt_right">1292.00000</td>
+      <td class="gt_row gt_right">3.873534e+06</td>
+      <td class="gt_row gt_right">97423.50000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Urban</td>
+      <td class="gt_row gt_left">percentage.fully.vaccinated</td>
+      <td class="gt_row gt_right">5.461368e+01</td>
+      <td class="gt_row gt_right">1.165367e+01</td>
+      <td class="gt_row gt_right">35.99374</td>
+      <td class="gt_row gt_right">9.351377e+01</td>
+      <td class="gt_row gt_right">51.67222</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<p>I began by mutating two variables(population fully vaccinated divided by population 12+) so I could figure out a percentage of each counties’ population that were vaccinated and used it as my new data set. I removed total vaccines allocated and administered mainly because I was more interested in looking at the population for vaccinations. I also figured out how many rural and urban counties there were by taking my joined dataset and grouping by urban.rural.classification, then summarizing count. I then wanted to look at how many counties had populations that were vaccinated 50% or more, so I decided to filter and use str_detect for numbers starting in 1,5,6,7,8,9, to find them. I also wanted to see what the highest percentage was so I arranged it by descending and to my surprise, there was a county that had a little over 100% in terms of vaccinated individuals. I wasn’t sure that it was because of people who had moved in who were already vaccinated, or some kids below the age of 12 could’ve taken the vaccination already. Recently, kids have started to become approved to get the vaccine so it is not a complete impossibility. I also performed the same two actions to look at populations that were below 50% vaccinated. There are more counties that are less than 50% vaccinated compared to counties that are 50% vaccinated or more.</p>
+<p>I didn’t tidy my dataset earlier because it was already tidy, so I decided to tidy my summary statistics! I took the joined dataset and I selected all the numerical variables that I had. I then used the na.omit() function to remove rows with NA’s and used the summarize_each function to calculate for various statistics: mean, sd, min, max, median. After piping the code to summarize the various stats, the dataset is 30 columns wide. I began with a pivot_longer for all the columns in order to have all my different variables and their stat titles in one column and the values in the other. Afterwards, I separate the variables and the stat titles utilizing ’_’ to differentiate the two columns. I then perform another pivot_wider to stat titles and their values into different columns. I repeat the same process for the second table, but I grouped by the urban rural classification before I selected my numerical variables, so I could compare the two types with each other. Rural counties has the highest and lowest percentage of vaccination, which is really interesting, but overall urban counties have a higher percentage that is fully vaccinated. #### Visualizing</p>
 <pre class="r"><code># your plot 1</code></pre>
 <p>Your discussion of plot 1</p>
 <pre class="r"><code># your plot 2</code></pre>

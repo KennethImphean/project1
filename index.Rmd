@@ -25,8 +25,13 @@ tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
 
 Paragraph or two introducing your datasets and variables, why they are interesting to you, etc.
 
+  The two datasets I have chosen are County Health Rankings in Texas and COVID-19 vaccinations by county in Texas. The variables contained in the County Health Rankings in Texas come partially from my Biostatistics project: county, food environment index, primary care physician population, and urban/rural classification. The variables contained in COVID-19 vaccinations by county in Texas deal with counties, the population who is eligible for vaccination (people 12 and older), and population of fully vaccinated individuals. The food environment index was calculated by measuring access to healthy foods and the income of counties and primary care physician population was found by looking at ratios of population to primary care physicians as well as including D.O.s. Population data was aquired by the 2019 US Census Bureau Population Estimates and the population who have been fully vaccinated was collected through vaccination records submitted by health care providers.
+  
+  This data is interesting to me because I want to see if there's a correlation between food environment index and people who are fully vaccinated. The food environment index takes into account access to supermarkets and grocery stores, which usually also have pharmacies as well where vaccinations can be given. I also want to look at how the population of primary care physicians could potentially impact the amount of fully vaccinated individuals. I would be inclined to believe that primary care physicians would definitely advertise for getting the vaccine. Finally I want to compare the data between rural and urban counties for vaccinated individuals. I feel like there would definitely be a higher percentage of individuals who are fully vaccinated in urban counties compared to rural ones.
 ```{R}
 library(tidyverse)
+library(dplyr)
+library(gt)
 countyhealth <- read_csv("~/Data from County Health Rankings and Biostats project.csv")
 countyvaccines <- read_csv("~/COVID-19 Vaccine Data by County.csv")
 
@@ -55,21 +60,41 @@ anti_join(countyvaccines,countyhealth)
 # your joining code
 ```
 
-An inner join was performed on the two datasets as it only kept all the rows that dealt with information on the counties. The totals calculated for the Texas state as a whole won't be used. There are 258 total rows in countyvaccines and 254 total rows in countyhealth. All rows of both datasets are unique as the IDs are just the counties within Texas, although countyvaccines does include rows with totals for Texas and additional vaccine programs that have allocated vaccines in Texas. All IDs from countyhealth appear in the inner join and only 4 IDs: Texas, Federal Long-Term Care Vaccination Program, Federal Pharmacy Retail Vaccination Program, and other only appear in countyvaccines. The IDs that the datasets have in common are all the counties in Texas: 254 in total. Four rows were dropped, but there isn't any potential problem with this as they don't relate to the counties specifically, they relate to the state as a whole.
+An inner join by counties was performed on the two datasets as it kept all the rows that dealt with information based on the Texas counties. The totals calculated for the Texas state as a whole won't be used. There are 258 total rows in countyvaccines and 254 total rows in countyhealth. All rows of both datasets are unique as the IDs are just the counties within Texas, although countyvaccines does include rows with totals for Texas and additional vaccine programs that have allocated vaccines in Texas. All IDs from countyhealth appear in the inner join and only 4 IDs: Texas, Federal Long-Term Care Vaccination Program, Federal Pharmacy Retail Vaccination Program, and other only appear in countyvaccines. The IDs that the datasets have in common are all the counties in Texas: 254 in total. Four rows were dropped, but there isn't any potential problem with this as they don't relate to the counties specifically, they relate to the state as a whole.
 
 ####  Wrangling
 
 ```{R}
-# your wrangling code
 
-# your wrangling code
+combinedcounty %>% mutate(percentage.fully.vaccinated = (people.fully.vaccinated/population.12.and.older)*100) %>% select (-total.doses.allocated, - vaccine.doses.administered) -> combinedcountyfinal
 
-# your wrangling code
+combinedcountyfinal %>% group_by(urban.rural.classification) %>% summarize(count=n())
+
+combinedcountyfinal %>% 
+  filter(str_detect(percentage.fully.vaccinated, "^[156789]")) %>% arrange (desc(percentage.fully.vaccinated))
+combinedcountyfinal %>% 
+  filter(str_detect(percentage.fully.vaccinated, "^[234]")) %>% arrange (percentage.fully.vaccinated)
+
+
+combinedcountyfinal %>% select(food.environment.index,primary.care.physician.population,people.vaccinated.with.at.least.one.dose, people.fully.vaccinated, population.12.and.older, percentage.fully.vaccinated)%>% na.omit() %>% summarize_each(funs(mean=mean, sd=sd, min=min, max=max, median=median)) %>% pivot_longer(0:30, names_to="stats",values_to="value") %>% separate(stats, into = c("Variable", "stats"), sep = "_") %>% pivot_wider(names_from= stats,values_from= value) -> Table1
+
+combinedcountyfinal %>% group_by(urban.rural.classification) %>% select(food.environment.index,primary.care.physician.population,people.vaccinated.with.at.least.one.dose, people.fully.vaccinated, population.12.and.older, percentage.fully.vaccinated)%>% na.omit() %>% summarize_each(funs(mean=mean, sd=sd, min=min, max=max, median=median)) %>% pivot_longer(-1, names_to="stats",values_to="value") %>% separate(stats, into = c("Variable", "stats"), sep = "_") %>% pivot_wider(names_from= stats,values_from= value) -> Table2
+
+  
+Table1 %>% gt %>% tab_header(title=md("**Summary Statistics**"),
+             subtitle=md("A table of my 'combinedcounty' summary statistics")) %>%
+  tab_spanner(label="Stats", columns=c("mean","sd","min","max","median"))
+
+Table2 %>% gt %>% tab_header(title=md("**Summary Statistics**"),
+             subtitle=md("A table of my 'combinedcounty' summary statistics grouped by urban and rural classification")) %>%
+  tab_spanner(label="Stats", columns=c("mean","sd","min","max","median"))
+
+
 ```
 
-Your discussion of wrangling section here. Feel encouraged to break up into more than once code chunk and discuss each in turn.
+I began by mutating two variables(population fully vaccinated divided by population 12+) so I could figure out a percentage of each counties' population that were vaccinated and used it as my new data set. I removed total vaccines allocated and administered mainly because I was more interested in looking at the population for vaccinations. I also figured out how many rural and urban counties there were by taking my joined dataset and grouping by urban.rural.classification, then summarizing count. I then wanted to look at how many counties had populations that were vaccinated 50% or more, so I decided to filter and use str_detect for numbers starting in 1,5,6,7,8,9, to find them. I also wanted to see what the highest percentage was so I arranged it by descending and to my surprise, there was a county that had a little over 100% in terms of vaccinated individuals. I wasn't sure that it was because of people who had moved in who were already vaccinated, or some kids below the age of 12 could've taken the vaccination already. Recently, kids have started to become approved to get the vaccine so it is not a complete impossibility. I also performed the same two actions to look at populations that were below 50% vaccinated. There are more counties that are less than 50% vaccinated compared to counties that are 50% vaccinated or more.
 
-
+I didn't tidy my dataset earlier because it was already tidy, so I decided to tidy my summary statistics! I took the joined dataset and I selected all the numerical variables that I had. I then used the na.omit() function to remove rows with NA's and used the summarize_each function to calculate for various statistics: mean, sd, min, max, median. After piping the code to summarize the various stats, the dataset is 30 columns wide. I began with a pivot_longer for all the columns in order to have all my different variables and their stat titles in one column and the values in the other. Afterwards, I separate the variables and the stat titles utilizing '_' to differentiate the two columns. I then perform another pivot_wider to stat titles and their values into different columns. I repeat the same process for the second table, but I grouped by the urban rural classification before I selected my numerical variables, so I could compare the two types with each other. Rural counties has the highest and lowest percentage of vaccination, which is really interesting, but overall urban counties have a higher percentage that is fully vaccinated.
 #### Visualizing
 
 ```{R}
