@@ -17,35 +17,27 @@ knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = 
 tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
 ```
 
-## Data Wrangling, Exploration, Visualization
+## Data Wrangling, Exploration, Visualization of COVID-19 Vaccine Data and Health Ranking by County
 
 ### Kenneth Imphean ksi238
 
 #### Introduction 
 
-Paragraph or two introducing your datasets and variables, why they are interesting to you, etc.
-
   The two datasets I have chosen are County Health Rankings in Texas and COVID-19 vaccinations by county in Texas. The variables contained in the County Health Rankings in Texas come partially from my Biostatistics project: county, food environment index, primary care physician population, and urban/rural classification. The variables contained in COVID-19 vaccinations by county in Texas deal with counties, the population who is eligible for vaccination (people 12 and older), and population of fully vaccinated individuals. The food environment index was calculated by measuring access to healthy foods and the income of counties and primary care physician population was found by looking at ratios of population to primary care physicians as well as including D.O.s. Population data was aquired by the 2019 US Census Bureau Population Estimates and the population who have been fully vaccinated was collected through vaccination records submitted by health care providers.
   
-  This data is interesting to me because I want to see if there's a correlation between food environment index and people who are fully vaccinated. The food environment index takes into account access to supermarkets and grocery stores, which usually also have pharmacies as well where vaccinations can be given. I also want to look at how the population of primary care physicians could potentially impact the amount of fully vaccinated individuals. I would be inclined to believe that primary care physicians would definitely advertise for getting the vaccine. Finally I want to compare the data between rural and urban counties for vaccinated individuals. I feel like there would definitely be a higher percentage of individuals who are fully vaccinated in urban counties compared to rural ones.
+  This data is interesting to me because I want to see if there's a correlation between food environment index and people who are fully vaccinated. The food environment index takes into account access to supermarkets and grocery stores, which usually also have pharmacies as well where vaccinations can be given. I also want to look at how the food environment indexes compare between rural and urban counties. Finally I want to compare the data between rural and urban counties for vaccinated individuals. I feel like there would definitely be a higher percentage of individuals who are fully vaccinated in urban counties compared to rural ones.
 ```{R}
 library(tidyverse)
 library(dplyr)
 library(gt)
 countyhealth <- read_csv("~/Data from County Health Rankings and Biostats project.csv")
 countyvaccines <- read_csv("~/COVID-19 Vaccine Data by County.csv")
-
 ```
 
 #### Tidying: Reshaping
 
-If your datasets are tidy already, demonstrate that you can reshape data with pivot wider/longer here (e.g., untidy and then retidy). Alternatively, it may be easier to wait until the wrangling section so you can reshape your summary statistics. Note here if you are going to do this.
+I will reshape my data later with my summary statistics!
 
-```{R}
-"I will reshape my data later with my summary statistics!"
-```
-
-    
 #### Joining/Merging
 
 ```{R}
@@ -57,7 +49,6 @@ countyvaccines %>% summarize_all(n_distinct)
 combinedcounty %>% summarize_all(n_distinct)
 anti_join(countyhealth,countyvaccines)
 anti_join(countyvaccines,countyhealth)
-# your joining code
 ```
 
 An inner join by counties was performed on the two datasets as it kept all the rows that dealt with information based on the Texas counties. The totals calculated for the Texas state as a whole won't be used. There are 258 total rows in countyvaccines and 254 total rows in countyhealth. All rows of both datasets are unique as the IDs are just the counties within Texas, although countyvaccines does include rows with totals for Texas and additional vaccine programs that have allocated vaccines in Texas. All IDs from countyhealth appear in the inner join and only 4 IDs: Texas, Federal Long-Term Care Vaccination Program, Federal Pharmacy Retail Vaccination Program, and other only appear in countyvaccines. The IDs that the datasets have in common are all the counties in Texas: 254 in total. Four rows were dropped, but there isn't any potential problem with this as they don't relate to the counties specifically, they relate to the state as a whole.
@@ -95,29 +86,55 @@ Table2 %>% gt %>% tab_header(title=md("**Summary Statistics**"),
 I began by mutating two variables(population fully vaccinated divided by population 12+) so I could figure out a percentage of each counties' population that were vaccinated and used it as my new data set. I removed total vaccines allocated and administered mainly because I was more interested in looking at the population for vaccinations. I also figured out how many rural and urban counties there were by taking my joined dataset and grouping by urban.rural.classification, then summarizing count. I then wanted to look at how many counties had populations that were vaccinated 50% or more, so I decided to filter and use str_detect for numbers starting in 1,5,6,7,8,9, to find them. I also wanted to see what the highest percentage was so I arranged it by descending and to my surprise, there was a county that had a little over 100% in terms of vaccinated individuals. I wasn't sure that it was because of people who had moved in who were already vaccinated, or some kids below the age of 12 could've taken the vaccination already. Recently, kids have started to become approved to get the vaccine so it is not a complete impossibility. I also performed the same two actions to look at populations that were below 50% vaccinated. There are more counties that are less than 50% vaccinated compared to counties that are 50% vaccinated or more.
 
 I didn't tidy my dataset earlier because it was already tidy, so I decided to tidy my summary statistics! I took the joined dataset and I selected all the numerical variables that I had. I then used the na.omit() function to remove rows with NA's and used the summarize_each function to calculate for various statistics: mean, sd, min, max, median. After piping the code to summarize the various stats, the dataset is 30 columns wide. I began with a pivot_longer for all the columns in order to have all my different variables and their stat titles in one column and the values in the other. Afterwards, I separate the variables and the stat titles utilizing '_' to differentiate the two columns. I then perform another pivot_wider to stat titles and their values into different columns. I repeat the same process for the second table, but I grouped by the urban rural classification before I selected my numerical variables, so I could compare the two types with each other. Rural counties has the highest and lowest percentage of vaccination, which is really interesting, but overall urban counties have a higher percentage that is fully vaccinated.
+
 #### Visualizing
 
 ```{R}
-# your plot 1
+ggplot(combinedcountyfinal, aes(food.environment.index, percentage.fully.vaccinated, color = urban.rural.classification)) +
+geom_point(size = 3, alpha = .5)+
+geom_smooth() +
+scale_x_continuous(breaks=seq(0,10,1)) +
+scale_y_continuous(breaks=seq(0,100,10),labels=c("0%","10%","20%","30%","40%","50%","60%","70%","80%","90%","100%")) +
+theme(legend.position=c(.9,.9)) +
+ggtitle("Percentage Fully Vaccinated vs. Food Environment Index") +
+xlab("Food Environment Index") +
+ylab("Percentage Fully Vaccinated")
+
 ```
 
-Your discussion of plot 1
+This first plot depicts Texas Counties' food environment index vs their percentage of fully vaccinated individuals and groups it by the county type of rural or urban. For rural, it kind of seems like there is a negative trend as the regression line kind of heads downward as food environment index, which I did not expect at all. I expected that as food environment index increased, the percentage of fully vaccinated individuals per county would kind of increase which really isn't the case for either types of counties. For urban counties, it seems to have a negative trend at first, but as the food environment index begins to go higher, so does the percentage of fully vaccinated people in the urban counties. There are outliers like the county that has over 100% fully vaccinated individuals or the urban county that has the minimum food environment index of the dataset having a relatively high population percentage of being fully vaccinated.
 
 ```{R}
-# your plot 2
+ggplot(combinedcountyfinal, aes(urban.rural.classification,percentage.fully.vaccinated, fill=urban.rural.classification))+
+geom_bar(stat="summary", width=.6)+
+scale_fill_brewer(palette="Set1") +
+geom_errorbar(stat="summary", width=.3) +
+scale_y_continuous(breaks=seq(0,60,5), labels=c("0%","5%","10%","15%","20%","25%","30%","35%","40%","45%","50%","55%","60%"))+
+theme(legend.position="none")+
+ggtitle("Average Percentage of Fully Vaccinated between County Types") +
+xlab("County Type") +
+ylab("Mean Percentage Fully Vaccinated")
 ```
 
-Your discussion of plot 2
+This second plot compares the mean percentage of fully vaccinated people in rural counties to urban counties. Urban counties have a mean percentage of about 55% and rural counties have a mean percentage of about 47%  They both have really small error bars because there's a lot of data for the two counties and there's a significant difference between the two. Urban counties have a significantly higher mean percentage of fully vaccinated people per county compared to rural counties.
 
 ```{R}
-# your plot 3
+ggplot(combinedcountyfinal, aes(x=percentage.fully.vaccinated)) + 
+  geom_histogram(aes(y=..density..), bins=15, color="black", fill="light blue")+
+  geom_density(color="green", alpha=.5)+
+scale_x_continuous(breaks=seq(10,100,10),labels=c("10%","20%","30%","40%","50%","60%","70%","80%","90%","100%")) +
+theme_minimal() +
+ggtitle("Histogram of Percentage of Fully Vaccinated People") +
+xlab("Percentage of People Fully Vaccinated") +
+ylab("Density")
+
 ```
 
-Your discussion of plot 3
+This depicts the distribution of percentages fully vaccinated. It's distribution is slightly right skewed and the highest distribution is around 40% to 50% which sort of makes sense. You'd expect the percentage to kind of balance out around 50% and it does. It's a lot rarer to see a high percentage of people fully vaccinated or a very low percentage of people vaccinated. There is no county where the value falls below 20%.
 
 #### Concluding Remarks
 
-If any!
+I found my data to be interesting and some parts my assumptions were correct and some weren't. I did expect urban counties to have on average a bigger percentage of people who were fully vaccinated compared to rural counties and I was right. Food environment index relationship to the percentage of people fully vaccinated varied a lot more than I expected and the trends for rural and urban counties were different!
 
 
 
