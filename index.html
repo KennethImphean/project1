@@ -1537,7 +1537,6 @@ div.tocify {
 <h3>Kenneth Imphean ksi238</h3>
 <div id="introduction" class="section level4">
 <h4>Introduction</h4>
-<p>Paragraph or two introducing your datasets and variables, why they are interesting to you, etc.</p>
 <p>The two datasets I have chosen are County Health Rankings in Texas and COVID-19 vaccinations by county in Texas. The variables contained in the County Health Rankings in Texas come partially from my Biostatistics project: county, food environment index, primary care physician population, and urban/rural classification. The variables contained in COVID-19 vaccinations by county in Texas deal with counties, the population who is eligible for vaccination (people 12 and older), and population of fully vaccinated individuals. The food environment index was calculated by measuring access to healthy foods and the income of counties and primary care physician population was found by looking at ratios of population to primary care physicians as well as including D.O.s. Population data was aquired by the 2019 US Census Bureau Population Estimates and the population who have been fully vaccinated was collected through vaccination records submitted by health care providers.</p>
 <p>This data is interesting to me because I want to see if there’s a correlation between food environment index and people who are fully vaccinated. The food environment index takes into account access to supermarkets and grocery stores, which usually also have pharmacies as well where vaccinations can be given. I also want to look at how the food environment indexes compare between rural and urban counties. Finally I want to compare the data between rural and urban counties for vaccinated individuals. I feel like there would definitely be a higher percentage of individuals who are fully vaccinated in urban counties compared to rural ones.</p>
 <pre class="r"><code>library(tidyverse)
@@ -1548,7 +1547,7 @@ countyvaccines &lt;- read_csv(&quot;~/COVID-19 Vaccine Data by County.csv&quot;)
 </div>
 <div id="tidying-reshaping" class="section level4">
 <h4>Tidying: Reshaping</h4>
-<p>I will reshape my data later with my summary statistics!&quot;</p>
+<p>I will reshape my data later with my summary statistics!</p>
 </div>
 <div id="joiningmerging" class="section level4">
 <h4>Joining/Merging</h4>
@@ -1662,7 +1661,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#zhkwxxpxnw .gt_table {
+#ddzopgwahy .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1687,7 +1686,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-left-color: #D3D3D3;
 }
 
-#zhkwxxpxnw .gt_heading {
+#ddzopgwahy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1699,7 +1698,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-right-color: #D3D3D3;
 }
 
-#zhkwxxpxnw .gt_title {
+#ddzopgwahy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1709,7 +1708,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-bottom-width: 0;
 }
 
-#zhkwxxpxnw .gt_subtitle {
+#ddzopgwahy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1719,13 +1718,13 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-top-width: 0;
 }
 
-#zhkwxxpxnw .gt_bottom_border {
+#ddzopgwahy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zhkwxxpxnw .gt_col_headings {
+#ddzopgwahy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1740,7 +1739,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-right-color: #D3D3D3;
 }
 
-#zhkwxxpxnw .gt_col_heading {
+#ddzopgwahy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1760,7 +1759,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   overflow-x: hidden;
 }
 
-#zhkwxxpxnw .gt_column_spanner_outer {
+#ddzopgwahy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1772,15 +1771,15 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   padding-right: 4px;
 }
 
-#zhkwxxpxnw .gt_column_spanner_outer:first-child {
+#ddzopgwahy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zhkwxxpxnw .gt_column_spanner_outer:last-child {
+#ddzopgwahy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zhkwxxpxnw .gt_column_spanner {
+#ddzopgwahy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1792,7 +1791,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   width: 100%;
 }
 
-#zhkwxxpxnw .gt_group_heading {
+#ddzopgwahy .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1814,7 +1813,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   vertical-align: middle;
 }
 
-#zhkwxxpxnw .gt_empty_group_heading {
+#ddzopgwahy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1829,15 +1828,15 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   vertical-align: middle;
 }
 
-#zhkwxxpxnw .gt_from_md > :first-child {
+#ddzopgwahy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zhkwxxpxnw .gt_from_md > :last-child {
+#ddzopgwahy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zhkwxxpxnw .gt_row {
+#ddzopgwahy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1856,7 +1855,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   overflow-x: hidden;
 }
 
-#zhkwxxpxnw .gt_stub {
+#ddzopgwahy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1868,7 +1867,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   padding-left: 12px;
 }
 
-#zhkwxxpxnw .gt_summary_row {
+#ddzopgwahy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1878,7 +1877,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   padding-right: 5px;
 }
 
-#zhkwxxpxnw .gt_first_summary_row {
+#ddzopgwahy .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1888,7 +1887,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-top-color: #D3D3D3;
 }
 
-#zhkwxxpxnw .gt_grand_summary_row {
+#ddzopgwahy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1898,7 +1897,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   padding-right: 5px;
 }
 
-#zhkwxxpxnw .gt_first_grand_summary_row {
+#ddzopgwahy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1908,11 +1907,11 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-top-color: #D3D3D3;
 }
 
-#zhkwxxpxnw .gt_striped {
+#ddzopgwahy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zhkwxxpxnw .gt_table_body {
+#ddzopgwahy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1921,7 +1920,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-bottom-color: #D3D3D3;
 }
 
-#zhkwxxpxnw .gt_footnotes {
+#ddzopgwahy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1935,13 +1934,13 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-right-color: #D3D3D3;
 }
 
-#zhkwxxpxnw .gt_footnote {
+#ddzopgwahy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#zhkwxxpxnw .gt_sourcenotes {
+#ddzopgwahy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1955,46 +1954,46 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-right-color: #D3D3D3;
 }
 
-#zhkwxxpxnw .gt_sourcenote {
+#ddzopgwahy .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#zhkwxxpxnw .gt_left {
+#ddzopgwahy .gt_left {
   text-align: left;
 }
 
-#zhkwxxpxnw .gt_center {
+#ddzopgwahy .gt_center {
   text-align: center;
 }
 
-#zhkwxxpxnw .gt_right {
+#ddzopgwahy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zhkwxxpxnw .gt_font_normal {
+#ddzopgwahy .gt_font_normal {
   font-weight: normal;
 }
 
-#zhkwxxpxnw .gt_font_bold {
+#ddzopgwahy .gt_font_bold {
   font-weight: bold;
 }
 
-#zhkwxxpxnw .gt_font_italic {
+#ddzopgwahy .gt_font_italic {
   font-style: italic;
 }
 
-#zhkwxxpxnw .gt_super {
+#ddzopgwahy .gt_super {
   font-size: 65%;
 }
 
-#zhkwxxpxnw .gt_footnote_marks {
+#ddzopgwahy .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="zhkwxxpxnw" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="ddzopgwahy" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   <thead class="gt_header">
     <tr>
       <th colspan="6" class="gt_heading gt_title gt_font_normal" style><strong>Summary Statistics</strong></th>
@@ -2079,7 +2078,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#nnragrjmqo .gt_table {
+#qjzqeqenku .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -2104,7 +2103,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-left-color: #D3D3D3;
 }
 
-#nnragrjmqo .gt_heading {
+#qjzqeqenku .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2116,7 +2115,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-right-color: #D3D3D3;
 }
 
-#nnragrjmqo .gt_title {
+#qjzqeqenku .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2126,7 +2125,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-bottom-width: 0;
 }
 
-#nnragrjmqo .gt_subtitle {
+#qjzqeqenku .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2136,13 +2135,13 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-top-width: 0;
 }
 
-#nnragrjmqo .gt_bottom_border {
+#qjzqeqenku .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nnragrjmqo .gt_col_headings {
+#qjzqeqenku .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2157,7 +2156,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-right-color: #D3D3D3;
 }
 
-#nnragrjmqo .gt_col_heading {
+#qjzqeqenku .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2177,7 +2176,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   overflow-x: hidden;
 }
 
-#nnragrjmqo .gt_column_spanner_outer {
+#qjzqeqenku .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2189,15 +2188,15 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   padding-right: 4px;
 }
 
-#nnragrjmqo .gt_column_spanner_outer:first-child {
+#qjzqeqenku .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nnragrjmqo .gt_column_spanner_outer:last-child {
+#qjzqeqenku .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nnragrjmqo .gt_column_spanner {
+#qjzqeqenku .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2209,7 +2208,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   width: 100%;
 }
 
-#nnragrjmqo .gt_group_heading {
+#qjzqeqenku .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2231,7 +2230,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   vertical-align: middle;
 }
 
-#nnragrjmqo .gt_empty_group_heading {
+#qjzqeqenku .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2246,15 +2245,15 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   vertical-align: middle;
 }
 
-#nnragrjmqo .gt_from_md > :first-child {
+#qjzqeqenku .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nnragrjmqo .gt_from_md > :last-child {
+#qjzqeqenku .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nnragrjmqo .gt_row {
+#qjzqeqenku .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2273,7 +2272,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   overflow-x: hidden;
 }
 
-#nnragrjmqo .gt_stub {
+#qjzqeqenku .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2285,7 +2284,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   padding-left: 12px;
 }
 
-#nnragrjmqo .gt_summary_row {
+#qjzqeqenku .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2295,7 +2294,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   padding-right: 5px;
 }
 
-#nnragrjmqo .gt_first_summary_row {
+#qjzqeqenku .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2305,7 +2304,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-top-color: #D3D3D3;
 }
 
-#nnragrjmqo .gt_grand_summary_row {
+#qjzqeqenku .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2315,7 +2314,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   padding-right: 5px;
 }
 
-#nnragrjmqo .gt_first_grand_summary_row {
+#qjzqeqenku .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2325,11 +2324,11 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-top-color: #D3D3D3;
 }
 
-#nnragrjmqo .gt_striped {
+#qjzqeqenku .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nnragrjmqo .gt_table_body {
+#qjzqeqenku .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2338,7 +2337,7 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-bottom-color: #D3D3D3;
 }
 
-#nnragrjmqo .gt_footnotes {
+#qjzqeqenku .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2352,13 +2351,13 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-right-color: #D3D3D3;
 }
 
-#nnragrjmqo .gt_footnote {
+#qjzqeqenku .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#nnragrjmqo .gt_sourcenotes {
+#qjzqeqenku .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2372,46 +2371,46 @@ Table1 %&gt;% gt %&gt;% tab_header(title = md(&quot;**Summary Statistics**&quot;
   border-right-color: #D3D3D3;
 }
 
-#nnragrjmqo .gt_sourcenote {
+#qjzqeqenku .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#nnragrjmqo .gt_left {
+#qjzqeqenku .gt_left {
   text-align: left;
 }
 
-#nnragrjmqo .gt_center {
+#qjzqeqenku .gt_center {
   text-align: center;
 }
 
-#nnragrjmqo .gt_right {
+#qjzqeqenku .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nnragrjmqo .gt_font_normal {
+#qjzqeqenku .gt_font_normal {
   font-weight: normal;
 }
 
-#nnragrjmqo .gt_font_bold {
+#qjzqeqenku .gt_font_bold {
   font-weight: bold;
 }
 
-#nnragrjmqo .gt_font_italic {
+#qjzqeqenku .gt_font_italic {
   font-style: italic;
 }
 
-#nnragrjmqo .gt_super {
+#qjzqeqenku .gt_super {
   font-size: 65%;
 }
 
-#nnragrjmqo .gt_footnote_marks {
+#qjzqeqenku .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="nnragrjmqo" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="qjzqeqenku" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   <thead class="gt_header">
     <tr>
       <th colspan="7" class="gt_heading gt_title gt_font_normal" style><strong>Summary Statistics</strong></th>
